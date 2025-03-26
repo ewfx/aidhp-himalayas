@@ -1,5 +1,5 @@
-# 🚀 Project Name
-as
+# 🚀 AI-Driven Hyper-Personalization & Recommendations
+Modern customers expect highly personalized experiences that cater to their unique preferences. Generative AI enhances hyper-personalization by analyzing customer profiles, social media activity, sentiment data, demographic details, and purchase history.
 ## 📌 Table of Contents
 - [Introduction](#introduction)
 - [Demo](#demo)
@@ -14,7 +14,7 @@ as
 ---
 
 ## 🎯 Introduction
-A brief overview of your project and its purpose. Mention which problem statement are your attempting to solve. Keep it concise and engaging.
+This script processes customer data, generates personalized banking recommendations using OpenAI, and creates a video with narration and subtitles based on the recommendations. It uses various libraries such as pandas, moviepy, pyttsx3, and tweepy.
 
 ## 🎥 Demo
 🔗 [Live Demo](#) (if applicable)  
