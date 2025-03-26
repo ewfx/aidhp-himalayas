@@ -619,24 +619,51 @@ def get_recommendation(system_prompt, user_prompt):
 
 def download_youtube_video(youtube_url, output_path):
     output_path = Path(output_path)  # Ensure it's a Path object
-    output_dir = output_path.parent  # Get the directory (artifacts/temp)
-    filename = output_path.name  # Get the filename (temp_background_video.mp4)
-    logger.info(f"Downloading YouTube video from {youtube_url} to {output_path}...")
+    output_dir = output_path.parent  # Directory: artifacts/temp
+    filename = output_path.name  # Filename: temp_background_video.mp4
+    full_path = str(output_path)  # Full path: F:\code\aidhp-himalayas\artifacts\temp\temp_background_video.mp4
+    
+    logger.info(f"Downloading YouTube video from {youtube_url} to {full_path}...")
+    original_dir = os.getcwd()  # Save current working directory
+    
     try:
+        # Ensure the directory exists
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Change to the target directory
+        os.chdir(str(output_dir))
+        logger.info(f"Changed working directory to: {os.getcwd()}")
+        
         yt = YouTube(youtube_url)
         stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
         if not stream:
             raise Exception("No suitable video stream found.")
-        # Download to the specified directory with the specified filename
-        stream.download(output_path=str(output_dir), filename=filename)
-        full_path = str(output_path)  # Convert back to string for os.path.getsize
+        
+        # Download to the current directory (artifacts/temp)
+        stream.download(filename=filename)
+        
+        # Verify the file exists
+        if not os.path.exists(full_path):
+            # Check if it was downloaded to the base directory
+            base_file = str(BASE_DIR / filename)
+            if os.path.exists(base_file):
+                logger.warning(f"File was downloaded to base directory: {base_file}. Moving to {full_path}")
+                os.rename(base_file, full_path)
+            else:
+                raise FileNotFoundError(f"File was not downloaded to {full_path} or base directory")
+        
         file_size = os.path.getsize(full_path)
         if file_size < 1024:
             logger.warning(f"Downloaded file {full_path} is unusually small ({file_size} bytes), may be incomplete.")
         logger.info(f"Video downloaded to {full_path}, size: {file_size} bytes")
+    
     except Exception as e:
         logger.error(f"Error downloading YouTube video: {e}")
         raise
+    finally:
+        # Restore original working directory
+        os.chdir(original_dir)
+        logger.info(f"Restored working directory to: {os.getcwd()}")
 
 def generate_video_with_moviepy(recommendation_text):
     logger.info("Generating video with recommendation text...")
@@ -703,8 +730,10 @@ def generate_video_with_moviepy(recommendation_text):
         clip.close()
     watermark.close()
     
-    for temp_file in [TEMP_AUDIO_FILE, TEMP_VIDEO_FILE]:
-        temp_file_str = str(temp_file)  # Convert Path to string
+    # Extended cleanup to handle misplaced file
+    temp_files = [TEMP_AUDIO_FILE, TEMP_VIDEO_FILE, BASE_DIR / 'temp_background_video.mp4']
+    for temp_file in temp_files:
+        temp_file_str = str(temp_file)
         retries = 5
         while retries > 0:
             try:
