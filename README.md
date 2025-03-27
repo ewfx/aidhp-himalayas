@@ -6,14 +6,15 @@ To recommend the personalization choices to customer:
 
 1.	Reading Customer data, along with consent of the customer.
    
-2.	If consent is provided by customer, 
-  •	Uses customer tweets from file generated using Twitter API, conduct sentiment analysis with help of TextBlob.
-
-  •	Construct personalized prompts using transaction history and sentiment data. 
-  
-  •	Utilizes OpenAI API to generate recommendations. 
-  
-  •	Converts the generated recommendations into Audio with pyttsx3, to incorporate subtitles, background music, and a watermark. Finalizes the video composition using Moviepy Python library.
+2.	If consent is provided by customer,
+   
+     •	Uses customer tweets from file generated using Twitter API, conduct sentiment analysis with help of TextBlob.
+   
+     •	Construct personalized prompts using transaction history and sentiment data. 
+     
+     •	Utilizes OpenAI API to generate recommendations. 
+     
+     •	Converts the generated recommendations into Audio with pyttsx3, to incorporate subtitles, background music, and a watermark. Finalizes the video composition using Moviepy Python library.
   
 
 
@@ -21,7 +22,9 @@ To recommend the personalization choices to customer:
 
 Input (UI/CLI + Excel Files) → Data Merge (Pandas) → Prompt (Customer Data) → OpenAI (Text) → MoviePy (Video) → Output (Text File + Video File + UI)
 
+
 ![image](https://github.com/user-attachments/assets/00c9e973-3552-483b-bcac-a2808c5ce68c)
+
 
 
 
@@ -63,6 +66,7 @@ Input (UI/CLI + Excel Files) → Data Merge (Pandas) → Prompt (Customer Data) 
       
       
     •	Output: Final video is saved as recommendations_video.mp4 in artifacts/output.
+
     
     **Delivery**
     
@@ -187,14 +191,14 @@ o	Why: A versatile, high-level language with strong libraries for data processin
     o	Trade-off: Slower execution compared to compiled languages, but team is expert in Python and performance isn’t critical for this use case.
     
 
-  2.	Pandas
+  **2.	Pandas**
 
 o	Why: Efficiently handles tabular data (Excel files) with powerful merging and filtering capabilities, essential for combining customer datasets.
 
     o	Trade-off: Memory-intensive for large datasets; alternatives like polars could offer better performance for big data.
     
 
-  3.	OpenAI API
+  **3.	OpenAI API**
 
     o	Why: Provides state-of-the-art natural language generation for personalized recommendations, leveraging customer data and sentiment analysis. The gpt-4o-mini model balances cost and quality.
     
@@ -208,21 +212,21 @@ o	Why: Efficiently handles tabular data (Excel files) with powerful merging and 
     o	Trade-off: Flask isn’t ideal for large-scale apps; a framework like Django might be overkill here but offers more built-in features
 
 
-  5.	MoviePy and pyttsx3
+  **5.	MoviePy and pyttsx3**
   
     o	Why: MoviePy simplifies video editing (text overlays, audio mixing), and pyttsx3 provides offline text-to-speech, avoiding additional API costs. Together, they create engaging video outputs.
     
     o	Trade-off: MoviePy relies on ImageMagick, adding an external dependency, and pyttsx3’s voice quality is basic compared to cloud-based TTS (e.g., Google Text-to-Speech).
 
 
-  6.	pytubefix
+  **6.	pytubefix**
   
     o	Why: Enables downloading YouTube videos for background content, keeping the script self-contained without hosting large video files.
     
     o	Trade-off: Relies on YouTube’s API stability and terms of service; a local video library would be more reliable but less dynamic.
 
 
-  7.	msoffcrypto
+  **7.	msoffcrypto**
   
     o	Why: Decrypts password-protected Excel files, ensuring data security aligns with banking standards.
     
