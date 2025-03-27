@@ -252,6 +252,15 @@ Here is one of Business recommendations provided using the created model:
   	These products not only align with your current needs but also set you on the path to achieving your financial aspirations. Let’s take the next steps together.
   Visit wellsfargo.com for more details.
 
+
+  ![image](https://github.com/user-attachments/assets/9c8c371b-0a4b-4e42-be66-0bc0649c0dc9)
+
+
+  ![image](https://github.com/user-attachments/assets/403e3155-3f41-4349-a083-42f275d38671)
+
+
+
+
 ---
 
 ## **Setup Instructions**
