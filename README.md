@@ -3,12 +3,13 @@
 **Overview**
 Hyper-personalization is key strategy for businesses to enhance customer experience, increase engagement. Businesses can create unique and engaging experiences for the customers, driving loyalty and growth.
 To recommend the personalization choices to customer:
+
 1.	Reading Customer data, along with consent of the customer.
 2.	If consent is provided by customer, 
-•	Uses customer tweets from file generated using Twitter API, conduct sentiment analysis with help of TextBlob. 
-•	Construct personalized prompts using transaction history and sentiment data. 
-•	Utilizes OpenAI API to generate recommendations. 
-•	Converts the generated recommendations into Audio with pyttsx3, to incorporate subtitles, background music, and a watermark. Finalizes the video composition using Moviepy Python library.
+  •	Uses customer tweets from file generated using Twitter API, conduct sentiment analysis with help of TextBlob. 
+  •	Construct personalized prompts using transaction history and sentiment data. 
+  •	Utilizes OpenAI API to generate recommendations. 
+  •	Converts the generated recommendations into Audio with pyttsx3, to incorporate subtitles, background music, and a watermark. Finalizes the video composition using Moviepy Python library.
 
 **Data flow**
 Input (UI/CLI + Excel Files) → Data Merge (Pandas) → Prompt (Customer Data) → OpenAI (Text) → MoviePy (Video) → Output (Text File + Video File + UI)
@@ -16,52 +17,80 @@ Input (UI/CLI + Excel Files) → Data Merge (Pandas) → Prompt (Customer Data) 
 
 
 
-**Input Collection**
-•	Web Mode: User submits a form via Flask (customer_id, optional prompt, and categories) through the HTML UI.
-•	CLI Mode: User enters customer_id via command-line input; default category is "Consumer and Small Business Banking".
-•	Environment variables (OPENAI_API_KEY, EXCEL_PASSWORD) are loaded using dotenv.
-  Data Loading
-•	Source Files: Three encrypted Excel files (customer_transactions.xlsx, customer_profile.xlsx, twitter_data.xlsx) are decrypted using msoffcrypto with EXCEL_PASSWORD.
-•	Processing: pandas reads and merges the files into a single DataFrame based on customer_id, including transaction, profile, and Twitter data. Consent fields (consent, consent_social_media) are validated.
-  Prompt Generation
-•	User Prompt: Customer data (e.g., name, transactions, sentiment) is extracted and formatted into a string for OpenAI. If no data or consent is missing, an error message is returned.
-•	System Prompt: Default or user-provided prompt is adjusted with selected categories (e.g., "Consumer Lending").
-  Recommendation Generation
-•	OpenAI API: The combined prompt is sent to gpt-4o-mini, generating a recommendation text (max 250 tokens). Results are logged and emitted via SocketIO.
-•	Output Storage: Text is written to recommendations.txt in artifacts/output.
-  Video Creation
-•	Narration: pyttsx3 converts the recommendation text to audio, saved as temp_audio.mp3.
-•	Background: pytubefix downloads a YouTube video to temp_background_video.mp4.
-•	Assembly: MoviePy combines:
-o	Background video (resized, looped to match audio duration).
-o	Text overlays (recommendation split into chunks).
-o	Audio (narration + background music from background_music.mp3).
-•	Output: Final video is saved as recommendations_video.mp4 in artifacts/output.
-  Delivery
-•	Web Mode: Flask serves the recommendation text and video link via SocketIO events, updating the UI in real-time.
-•	CLI Mode: Results are logged to the console; video is saved locally.
-•	Temporary files (temp_audio.mp3, temp_background_video.mp4) are cleaned up.
+    **Input Collection**
+    •	Web Mode: User submits a form via Flask (customer_id, optional prompt, and categories) through the HTML UI.
+    
+    •	CLI Mode: User enters customer_id via command-line input; default category is "Consumer and Small Business Banking".
+    
+    •	Environment variables (OPENAI_API_KEY, EXCEL_PASSWORD) are loaded using dotenv.
+    
+    
+    **  Data Loading**
+    •	Source Files: Three encrypted Excel files (customer_transactions.xlsx, customer_profile.xlsx, twitter_data.xlsx) are decrypted using msoffcrypto with EXCEL_PASSWORD.
+    
+    •	Processing: pandas reads and merges the files into a single DataFrame based on customer_id, including transaction, profile, and Twitter data. Consent fields (consent, consent_social_media) are validated.
+    
+    **  Prompt Generation**
+    •	User Prompt: Customer data (e.g., name, transactions, sentiment) is extracted and formatted into a string for OpenAI. If no data or consent is missing, an error message is returned.
+    
+    •	System Prompt: Default or user-provided prompt is adjusted with selected categories (e.g., "Consumer Lending").
+    
+      **Recommendation Generation**
+    •	OpenAI API: The combined prompt is sent to gpt-4o-mini, generating a recommendation text (max 250 tokens). Results are logged and emitted via SocketIO.
+    
+    •	Output Storage: Text is written to recommendations.txt in artifacts/output.
+    
+     ** Video Creation**
+    •	Narration: pyttsx3 converts the recommendation text to audio, saved as temp_audio.mp3.
+    
+    •	Background: pytubefix downloads a YouTube video to temp_background_video.mp4.
+    
+    •	Assembly: MoviePy combines:
+    
+      o	Background video (resized, looped to match audio duration).
+      
+      o	Text overlays (recommendation split into chunks).
+      
+      o	Audio (narration + background music from background_music.mp3).
+      
+      
+    •	Output: Final video is saved as recommendations_video.mp4 in artifacts/output.
+    
+    **Delivery**
+    
+      •	Web Mode: Flask serves the recommendation text and video link via SocketIO events, updating the UI in real-time.
+      
+      •	CLI Mode: Results are logged to the console; video is saved locally.
+      
+      •	Temporary files (temp_audio.mp3, temp_background_video.mp4) are cleaned up.
+    
 
 **Approach**
 Approach to Designing the application
+
 1.	Modular Design
-o	Goal: Break functionality into reusable, independent components.
-o	Implementation: Separate functions for data loading (load_data), prompt generation (generate_user_prompt), recommendation generation (get_recommendation), and video creation (generate_video_with_moviepy). This enhances maintainability and testing.
-2.	User-Centric Workflow
-o	Goal: Cater to both technical (CLI) and non-technical (web) users.
-o	Implementation: Dual execution modes: CLI for quick runs with minimal input, and a Flask-based web app with an intuitive UI for interactive use. Real-time feedback via SocketIO keeps users informed.
-3.	Data-Driven Personalization
-o	Goal: Leverage customer data for tailored banking recommendations.
-o	Implementation: Use pandas to merge transaction, profile, and Twitter data, feeding it into OpenAI’s gpt-4o-mini with a structured prompt. Consent checks ensure ethical data use.
-4.	Multimedia Engagement
-o	Goal: Enhance recommendations with visual and audio appeal.
-o	Implementation: Combine pyttsx3 for narration, pytubefix for background video, and MoviePy to overlay text and mix audio, creating a polished video output.
-5.	Security and Robustness
-o	Goal: Protect sensitive data and ensure reliable execution.
-o	Implementation: Encrypt Excel files with msoffcrypto, validate prerequisites (check_prerequisites), and implement logging for debugging. Temporary file cleanup prevents resource leaks.
-6.	Iterative Development
-o	Goal: Build a flexible, extensible prototype.
-o	Implementation: Use Python for rapid prototyping, hardcode initial settings (e.g., YouTube URL), and leave room for future enhancements (e.g., configurable parameters).
+  o	Goal: Break functionality into reusable, independent components.
+  o	Implementation: Separate functions for data loading (load_data), prompt generation (generate_user_prompt), recommendation generation (get_recommendation), and video creation (generate_video_with_moviepy). This enhances maintainability and testing.
+
+3.	User-Centric Workflow
+  o	Goal: Cater to both technical (CLI) and non-technical (web) users.
+  o	Implementation: Dual execution modes: CLI for quick runs with minimal input, and a Flask-based web app with an intuitive UI for interactive use. Real-time feedback via SocketIO keeps users informed.
+
+5.	Data-Driven Personalization
+  o	Goal: Leverage customer data for tailored banking recommendations.
+  o	Implementation: Use pandas to merge transaction, profile, and Twitter data, feeding it into OpenAI’s gpt-4o-mini with a structured prompt. Consent checks ensure ethical data use.
+
+7.	Multimedia Engagement
+  o	Goal: Enhance recommendations with visual and audio appeal.
+  o	Implementation: Combine pyttsx3 for narration, pytubefix for background video, and MoviePy to overlay text and mix audio, creating a polished video output.
+
+9.	Security and Robustness
+  o	Goal: Protect sensitive data and ensure reliable execution.
+  o	Implementation: Encrypt Excel files with msoffcrypto, validate prerequisites (check_prerequisites), and implement logging for debugging. Temporary file cleanup prevents resource leaks.
+
+11.	Iterative Development
+  o	Goal: Build a flexible, extensible prototype.
+  o	Implementation: Use Python for rapid prototyping, hardcode initial settings (e.g., YouTube URL), and leave room for future enhancements (e.g., configurable parameters).
 ________________________________________
 
 
@@ -73,29 +102,37 @@ ________________________________________
 
 **Key-Technical considerations**
 Key technical considerations and the high-level technology choices 
-1.	Data Handling and Security
-o	Encrypted Excel Files: The script uses msoffcrypto to decrypt Excel files (customer_transactions.xlsx, customer_profile.xlsx, twitter_data.xlsx) with a password stored in an environment variable (EXCEL_PASSWORD). This ensures sensitive customer data is protected at rest.
-o	Consent Checks: The script enforces consent (consent and consent_social_media) before processing data, aligning with privacy regulations like GDPR or CCPA. Missing or invalid consent halts processing for a customer.
-o	Pandas for Data Processing: pandas is used to load, merge, and filter data based on customer_id. Merging transaction, profile, and Twitter data into a single DataFrame enables comprehensive customer analysis but assumes consistent column naming and data integrity across files.
-2.	API Integration
-o	OpenAI API: The script leverages OpenAI’s gpt-4o-mini model to generate personalized banking product recommendations. The system prompt is dynamically adjusted with user-selected categories, and the user prompt includes customer data, ensuring context-aware outputs. Error handling for API calls is present but could be more robust (e.g., retry logic for transient failures).
-o	Token and Temperature Settings: max_tokens=250 limits output length to fit the 220-word constraint, and temperature=0.7 balances creativity and coherence in recommendations.
-3.	Web Application
-o	Flask and SocketIO: The script uses Flask as a lightweight web framework and SocketIO for real-time communication. This enables live updates (logs, recommendations, video links) to the frontend, enhancing user experience.
-o	HTML/CSS/JavaScript: The frontend is a single-page app with a form for input (customer ID, categories, prompt) and dynamic sections for results. JavaScript handles form submission and SocketIO events, while CSS provides a polished UI. However, the template is embedded as a string, which could complicate maintenance for larger UIs.
-4.	Video Generation
-o	MoviePy: Used to create a video with text overlays (recommendations), background video, narration, and music. Text is split into chunks for readability, synced with audio duration, and styled with ImageMagick for rendering.
-o	pyttsx3: Generates text-to-speech narration saved as a temporary MP3. The speech rate (140) is hardcoded, which might not suit all content lengths or user preferences.
-o	YouTube Video Download: pytubefix downloads a background video from a hardcoded URL. Directory management and cleanup are handled, but the process is brittle (e.g., relies on YouTube availability and specific stream formats).
-o	Resource Management: Temporary files are cleaned up with retry logic for PermissionError, but lingering files could still occur if exceptions are unhandled elsewhere.
-5.	Logging and Debugging
-o	Custom Logging: The script uses Python’s logging with a custom SocketIOHandler to stream logs to the frontend. This is great for real-time feedback but lacks persistent storage (e.g., file logging) for post-mortem analysis.
-o	Prerequisite Checks: The check_prerequisites function validates dependencies, API keys, and file paths, ensuring the script fails fast if setup is incomplete.
-6.	File System Management
-o	Pathlib: The script uses Path for cross-platform path handling, defining relative paths from the script’s location (BASE_DIR). This is robust but assumes a specific directory structure (data, artifacts/output, artifacts/temp).
-o	Static File Serving: Flask serves the generated video from artifacts/output, requiring correct static folder configuration.
-7.	Execution Modes
-o	CLI vs. Web: The script supports both command-line (--cli) and web modes. CLI mode prompts for a customer ID and uses a default category, while web mode offers a UI with category selection. This dual-mode design adds flexibility but increases complexity.
+
+**1.	Data Handling and Security**
+      o	Encrypted Excel Files: The script uses msoffcrypto to decrypt Excel files (customer_transactions.xlsx, customer_profile.xlsx, twitter_data.xlsx) with a password stored in an environment variable (EXCEL_PASSWORD). This ensures sensitive customer data is protected at rest.
+      o	Consent Checks: The script enforces consent (consent and consent_social_media) before processing data, aligning with privacy regulations like GDPR or CCPA. Missing or invalid consent halts processing for a customer.
+      o	Pandas for Data Processing: pandas is used to load, merge, and filter data based on customer_id. Merging transaction, profile, and Twitter data into a single DataFrame enables comprehensive customer analysis but assumes consistent column naming and data integrity across files.
+    
+  **2.	API Integration**
+  o	OpenAI API: The script leverages OpenAI’s gpt-4o-mini model to generate personalized banking product recommendations. The system prompt is dynamically adjusted with user-selected categories, and the user prompt includes customer data, ensuring context-aware outputs. Error handling for API calls is present but could be more robust (e.g., retry logic for transient failures).
+  o	Token and Temperature Settings: max_tokens=250 limits output length to fit the 220-word constraint, and temperature=0.7 balances creativity and coherence in recommendations.
+  
+  **3.	Web Application**
+    o	Flask and SocketIO: The script uses Flask as a lightweight web framework and SocketIO for real-time communication. This enables live updates (logs, recommendations, video links) to the frontend, enhancing user experience.
+    o	HTML/CSS/JavaScript: The frontend is a single-page app with a form for input (customer ID, categories, prompt) and dynamic sections for results. JavaScript handles form submission and SocketIO events, while CSS provides a polished UI. However, the template is embedded as a string, which could complicate maintenance for larger UIs.
+  
+  **4.	Video Generation**
+  
+    o	MoviePy: Used to create a video with text overlays (recommendations), background video, narration, and music. Text is split into chunks for readability, synced with audio duration, and styled with ImageMagick for rendering.
+    o	pyttsx3: Generates text-to-speech narration saved as a temporary MP3. The speech rate (140) is hardcoded, which might not suit all content lengths or user preferences.
+    o	YouTube Video Download: pytubefix downloads a background video from a hardcoded URL. Directory management and cleanup are handled, but the process is brittle (e.g., relies on YouTube availability and specific stream formats).
+    o	Resource Management: Temporary files are cleaned up with retry logic for PermissionError, but lingering files could still occur if exceptions are unhandled elsewhere.
+  
+  **5.	Logging and Debugging**
+    o	Custom Logging: The script uses Python’s logging with a custom SocketIOHandler to stream logs to the frontend. This is great for real-time feedback but lacks persistent storage (e.g., file logging) for post-mortem analysis.
+    o	Prerequisite Checks: The check_prerequisites function validates dependencies, API keys, and file paths, ensuring the script fails fast if setup is incomplete.
+  
+  **6.	File System Management**
+    o	Pathlib: The script uses Path for cross-platform path handling, defining relative paths from the script’s location (BASE_DIR). This is robust but assumes a specific directory structure (data, artifacts/output, artifacts/temp).
+    o	Static File Serving: Flask serves the generated video from artifacts/output, requiring correct static folder configuration.
+  
+  **7.	Execution Modes**
+    o	CLI vs. Web: The script supports both command-line (--cli) and web modes. CLI mode prompts for a customer ID and uses a default category, while web mode offers a UI with category selection. This dual-mode design adds flexibility but increases complexity.
 
 
 **High-Level Technology Choices and Rationale**
