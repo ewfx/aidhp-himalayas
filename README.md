@@ -42,51 +42,6 @@ To run the script in CLI mode:
 
 You will be prompted to enter a customer ID.
 
-File Structure
-
-f:\code\aidhp-himalayas
-│
-├── code
-│   ├── src
-│   │   ├── main.py                # Main application script
-│   │   └── ...
-│   ├── test
-│       ├── unittest.py            # Unit tests for the application
-│       └── ...
-├── data                           # Input data files
-│   ├── customer_transactions.xlsx
-│   ├── customer_profile.xlsx
-│   ├── twitter_data.xlsx
-│   └── background_music.mp3
-├── artifacts                      # Output files
-│   ├── output
-│   │   ├── recommendations.txt
-│   │   ├── recommendations_video.mp4
-│   └── temp
-│       ├── temp_audio.mp3
-│       ├── temp_background_video.mp4
-│       └── ...
-├── .env                           # Environment variables
-├            
-└── [README.md]
-
-
-
-Testing
-
-Run Unit Tests
-Navigate to the test directory and run the tests:
-python -m unittest discover -s . -p "*.py"
-
-
-Test Cases
-Flask Application:
-   Test GET and POST requests to the web interface.
-CLI Mode:
-   Test recommendation generation in CLI mode.
-Utility Functions:
-   Test data loading, user prompt generation, and OpenAI API calls.
-
 Key Components
 1. Flask Application
 Routes:
@@ -106,16 +61,16 @@ Video Generation:
 Dependencies
    The project uses the following Python libraries:
 
-Flask
-Flask-SocketIO
-pandas
-openai
-pyttsx3
-moviepy
-msoffcrypto
-openpyxl
-python-dotenv
-Install all dependencies using:
+         Flask
+         Flask-SocketIO
+         pandas
+         openai
+         pyttsx3
+         moviepy
+         msoffcrypto
+         openpyxl
+         python-dotenv
+         Install all dependencies using:
 
 Troubleshooting
 1. OpenAI API Key Not Set
@@ -127,9 +82,9 @@ Troubleshooting
 3. Missing Data Files
    Ensure the required Excel files are present in the data directory:
 
-customer_transactions.xlsx
-customer_profile.xlsx
-twitter_data.xlsx
+      customer_transactions.xlsx
+      customer_profile.xlsx
+      twitter_data.xlsx
 
 4. Permission Errors
 Run the script with appropriate permissions to access files and directories.
