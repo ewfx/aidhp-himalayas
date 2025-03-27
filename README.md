@@ -28,6 +28,11 @@ To recommend the personalization choices to customer:
 
   
 
+
+
+
+
+
 **Data flow**
 
 Input (UI/CLI + Excel Files) → Data Merge (Pandas) → Prompt (Customer Data) → OpenAI (Text) → MoviePy (Video) → Output (Text File + Video File + UI)
