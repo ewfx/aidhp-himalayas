@@ -5,11 +5,16 @@ Hyper-personalization is key strategy for businesses to enhance customer experie
 To recommend the personalization choices to customer:
 
 1.	Reading Customer data, along with consent of the customer.
+   
 2.	If consent is provided by customer, 
-  •	Uses customer tweets from file generated using Twitter API, conduct sentiment analysis with help of TextBlob. 
+  •	Uses customer tweets from file generated using Twitter API, conduct sentiment analysis with help of TextBlob.
+
   •	Construct personalized prompts using transaction history and sentiment data. 
+  
   •	Utilizes OpenAI API to generate recommendations. 
+  
   •	Converts the generated recommendations into Audio with pyttsx3, to incorporate subtitles, background music, and a watermark. Finalizes the video composition using Moviepy Python library.
+  
 
 
 **Data flow**
@@ -72,27 +77,40 @@ Input (UI/CLI + Excel Files) → Data Merge (Pandas) → Prompt (Customer Data) 
 Approach to Designing the application
 
   1.	Modular Design
+
     o	Goal: Break functionality into reusable, independent components.
+    
     o	Implementation: Separate functions for data loading (load_data), prompt generation (generate_user_prompt), recommendation generation (get_recommendation), and video creation (generate_video_with_moviepy). This enhances maintainability and testing.
   
   3.	User-Centric Workflow
+
     o	Goal: Cater to both technical (CLI) and non-technical (web) users.
+    
     o	Implementation: Dual execution modes: CLI for quick runs with minimal input, and a Flask-based web app with an intuitive UI for interactive use. Real-time feedback via SocketIO keeps users informed.
   
   5.	Data-Driven Personalization
+
     o	Goal: Leverage customer data for tailored banking recommendations.
+    
     o	Implementation: Use pandas to merge transaction, profile, and Twitter data, feeding it into OpenAI’s gpt-4o-mini with a structured prompt. Consent checks ensure ethical data use.
   
   7.	Multimedia Engagement
+
     o	Goal: Enhance recommendations with visual and audio appeal.
+    
     o	Implementation: Combine pyttsx3 for narration, pytubefix for background video, and MoviePy to overlay text and mix audio, creating a polished video output.
   
   9.	Security and Robustness
+
     o	Goal: Protect sensitive data and ensure reliable execution.
+    
     o	Implementation: Encrypt Excel files with msoffcrypto, validate prerequisites (check_prerequisites), and implement logging for debugging. Temporary file cleanup prevents resource leaks.
+
   
   11.	Iterative Development
+  
     o	Goal: Build a flexible, extensible prototype.
+    
     o	Implementation: Use Python for rapid prototyping, hardcode initial settings (e.g., YouTube URL), and leave room for future enhancements (e.g., configurable parameters).
 
 
@@ -100,27 +118,32 @@ Approach to Designing the application
 **Core Philosophy**
 
   •	Start Simple: Focus on core functionality (data to recommendation to video).
+  
   •	Integrate Gradually: Layer in web UI, real-time updates, and multimedia.
+  
   •	Prioritize User Experience: Ensure outputs are engaging and accessible.
+  
 
 
 **Key-Technical considerations**
 Key technical considerations and the high-level technology choices 
 
 **1.	Data Handling and Security**
-      o	Encrypted Excel Files: The script uses msoffcrypto to decrypt Excel files (customer_transactions.xlsx, customer_profile.xlsx, twitter_data.xlsx) with a password stored in an environment variable (EXCEL_PASSWORD). This ensures sensitive customer data is protected at rest.
+      **o	Encrypted Excel Files:** The script uses msoffcrypto to decrypt Excel files (customer_transactions.xlsx, customer_profile.xlsx, twitter_data.xlsx) with a password stored in an environment variable (EXCEL_PASSWORD). This ensures sensitive customer data is protected at rest.
       
-      o	Consent Checks: The script enforces consent (consent and consent_social_media) before processing data, aligning with privacy regulations like GDPR or CCPA. Missing or invalid consent halts processing for a customer.
+      **o	Consent Checks:** The script enforces consent (consent and consent_social_media) before processing data, aligning with privacy regulations like GDPR or CCPA. Missing or invalid consent halts processing for a customer.
       
-      o	Pandas for Data Processing: pandas is used to load, merge, and filter data based on customer_id. Merging transaction, profile, and Twitter data into a single DataFrame enables comprehensive customer analysis but assumes consistent column naming and data integrity across files.
+      **o	Pandas for Data Processing:** pandas is used to load, merge, and filter data based on customer_id. Merging transaction, profile, and Twitter data into a single DataFrame enables comprehensive customer analysis but assumes consistent column naming and data integrity across files.
     
   **2.	API Integration**
-  o	OpenAI API: The script leverages OpenAI’s gpt-4o-mini model to generate personalized banking product recommendations. The system prompt is dynamically adjusted with user-selected categories, and the user prompt includes customer data, ensuring context-aware outputs. Error handling for API calls is present but could be more robust (e.g., retry logic for transient failures).
   
-  o	Token and Temperature Settings: max_tokens=250 limits output length to fit the 220-word constraint, and temperature=0.7 balances creativity and coherence in recommendations.
+      **o	OpenAI API:** The script leverages OpenAI’s gpt-4o-mini model to generate personalized banking product recommendations. The system prompt is dynamically adjusted with user-selected categories, and the user prompt includes customer data, ensuring context-aware outputs. Error handling for API calls is present but could be more robust (e.g., retry logic for transient failures).
+  
+      **o	Token and Temperature Settings**: max_tokens=250 limits output length to fit the 220-word constraint, and temperature=0.7 balances creativity and coherence in recommendations.
   
   
   **3.	Web Application**
+    
     o	Flask and SocketIO: The script uses Flask as a lightweight web framework and SocketIO for real-time communication. This enables live updates (logs, recommendations, video links) to the frontend, enhancing user experience.
     
     o	HTML/CSS/JavaScript: The frontend is a single-page app with a form for input (customer ID, categories, prompt) and dynamic sections for results. JavaScript handles form submission and SocketIO events, while CSS provides a polished UI. However, the template is embedded as a string, which could complicate maintenance for larger UIs.
@@ -157,27 +180,28 @@ Key technical considerations and the high-level technology choices
 
 **High-Level Technology Choices and Rationale**
   
-  1.	Python
+  **1.	Python**
 
 o	Why: A versatile, high-level language with strong libraries for data processing (pandas), AI (openai), web development (Flask), and multimedia (MoviePy, pyttsx3). Ideal for rapid prototyping and integrating diverse functionalities.
 
     o	Trade-off: Slower execution compared to compiled languages, but team is expert in Python and performance isn’t critical for this use case.
     
 
-  3.	Pandas
+  2.	Pandas
 
 o	Why: Efficiently handles tabular data (Excel files) with powerful merging and filtering capabilities, essential for combining customer datasets.
 
     o	Trade-off: Memory-intensive for large datasets; alternatives like polars could offer better performance for big data.
     
 
-  5.	OpenAI API
+  3.	OpenAI API
 
     o	Why: Provides state-of-the-art natural language generation for personalized recommendations, leveraging customer data and sentiment analysis. The gpt-4o-mini model balances cost and quality.
     
     o	Trade-off: Dependency on external API introduces latency, cost, and potential downtime risks. Local models (e.g., via Hugging Face) could reduce this but require more setup.
 
-  7.	Flask and SocketIO
+  
+  4.	Flask and SocketIO
   
     o	Why: Flask is lightweight and sufficient for a simple web app, while SocketIO enables real-time updates, critical for a responsive UI during recommendation and video generation.
     
@@ -302,20 +326,20 @@ Troubleshooting
 Run the script with appropriate permissions to access files and directories.
 
 **Conclusion**
-Summary: This script delivers hyper-personalized banking recommendations by integrating customer data, AI, and multimedia output, enhancing customer engagement for Wells Fargo.
-
-Strengths: 
-1.	Secure data handling with encryption and consent checks.
-2.	Real-time web interface via Flask and SocketIO.
-3.	Dynamic text and video generation using OpenAI and MoviePy.
-
-Value: Combines advanced analytics, natural language processing, and visual storytelling to drive product adoption.
-
-Future Potential: 
-1.	Scale with async processing for multiple customers.
-2.	Enhance with configurable settings and robust error handling.
-3.	Explore local AI models for cost efficiency.
-
-Takeaway: A powerful proof-of-concept showcasing Python’s versatility in financial services innovation.
+  This script delivers hyper-personalized banking recommendations by integrating customer data, AI, and multimedia output, enhancing customer engagement for Wells Fargo.
+  
+  **Strengths: **
+  1.	Secure data handling with encryption and consent checks.
+  2.	Real-time web interface via Flask and SocketIO.
+  3.	Dynamic text and video generation using OpenAI and MoviePy.
+  
+  Value: Combines advanced analytics, natural language processing, and visual storytelling to drive product adoption.
+  
+  **Future Potential: **
+  1.	Scale with async processing for multiple customers.
+  2.	Enhance with configurable settings and robust error handling.
+  3.	Explore local AI models for cost efficiency.
+  
+  **Takeaway:** A powerful proof-of-concept showcasing Python’s versatility in financial services innovation.
 
 
