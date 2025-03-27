@@ -253,7 +253,8 @@ Here is one of Business recommendations provided using the created model:
   Visit wellsfargo.com for more details.
 
 
-  ![image](https://github.com/user-attachments/assets/9c8c371b-0a4b-4e42-be66-0bc0649c0dc9)
+  ![image](https://github.com/user-attachments/assets/97cd207a-c69d-44de-b82e-3986be24f2f9)
+
 
 
   ![image](https://github.com/user-attachments/assets/403e3155-3f41-4349-a083-42f275d38671)
