@@ -18,6 +18,16 @@ To recommend the personalization choices to customer:
   
 
 
+  ![image](https://github.com/user-attachments/assets/97cd207a-c69d-44de-b82e-3986be24f2f9)
+
+
+
+  ![image](https://github.com/user-attachments/assets/403e3155-3f41-4349-a083-42f275d38671)
+
+
+
+  
+
 **Data flow**
 
 Input (UI/CLI + Excel Files) → Data Merge (Pandas) → Prompt (Customer Data) → OpenAI (Text) → MoviePy (Video) → Output (Text File + Video File + UI)
@@ -253,11 +263,7 @@ Here is one of Business recommendations provided using the created model:
   Visit wellsfargo.com for more details.
 
 
-  ![image](https://github.com/user-attachments/assets/97cd207a-c69d-44de-b82e-3986be24f2f9)
 
-
-
-  ![image](https://github.com/user-attachments/assets/403e3155-3f41-4349-a083-42f275d38671)
 
 
 
