@@ -24,12 +24,11 @@ To recommend the personalization choices to customer:
 
   ![image](https://github.com/user-attachments/assets/403e3155-3f41-4349-a083-42f275d38671)
 
-
-
+  
+  
   
 
-
-
+ 
 
 
 
