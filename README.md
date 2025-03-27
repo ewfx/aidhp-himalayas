@@ -25,12 +25,12 @@ Input (UI/CLI + Excel Files) → Data Merge (Pandas) → Prompt (Customer Data) 
     •	Environment variables (OPENAI_API_KEY, EXCEL_PASSWORD) are loaded using dotenv.
     
     
-    **  Data Loading**
+    **Data Loading**
     •	Source Files: Three encrypted Excel files (customer_transactions.xlsx, customer_profile.xlsx, twitter_data.xlsx) are decrypted using msoffcrypto with EXCEL_PASSWORD.
     
     •	Processing: pandas reads and merges the files into a single DataFrame based on customer_id, including transaction, profile, and Twitter data. Consent fields (consent, consent_social_media) are validated.
     
-    **  Prompt Generation**
+    **Prompt Generation**
     •	User Prompt: Customer data (e.g., name, transactions, sentiment) is extracted and formatted into a string for OpenAI. If no data or consent is missing, an error message is returned.
     
     •	System Prompt: Default or user-provided prompt is adjusted with selected categories (e.g., "Consumer Lending").
@@ -40,7 +40,7 @@ Input (UI/CLI + Excel Files) → Data Merge (Pandas) → Prompt (Customer Data) 
     
     •	Output Storage: Text is written to recommendations.txt in artifacts/output.
     
-     ** Video Creation**
+     **Video Creation**
     •	Narration: pyttsx3 converts the recommendation text to audio, saved as temp_audio.mp3.
     
     •	Background: pytubefix downloads a YouTube video to temp_background_video.mp4.
@@ -136,27 +136,37 @@ Key technical considerations and the high-level technology choices
 
 
 **High-Level Technology Choices and Rationale**
-1.	Python
-o	Why: A versatile, high-level language with strong libraries for data processing (pandas), AI (openai), web development (Flask), and multimedia (MoviePy, pyttsx3). Ideal for rapid prototyping and integrating diverse functionalities.
-o	Trade-off: Slower execution compared to compiled languages, but team is expert in Python and performance isn’t critical for this use case.
-2.	Pandas
-o	Why: Efficiently handles tabular data (Excel files) with powerful merging and filtering capabilities, essential for combining customer datasets.
-o	Trade-off: Memory-intensive for large datasets; alternatives like polars could offer better performance for big data.
-3.	OpenAI API
-o	Why: Provides state-of-the-art natural language generation for personalized recommendations, leveraging customer data and sentiment analysis. The gpt-4o-mini model balances cost and quality.
-o	Trade-off: Dependency on external API introduces latency, cost, and potential downtime risks. Local models (e.g., via Hugging Face) could reduce this but require more setup.
-4.	Flask and SocketIO
-o	Why: Flask is lightweight and sufficient for a simple web app, while SocketIO enables real-time updates, critical for a responsive UI during recommendation and video generation.
-o	Trade-off: Flask isn’t ideal for large-scale apps; a framework like Django might be overkill here but offers more built-in features 
-5.	MoviePy and pyttsx3
-o	Why: MoviePy simplifies video editing (text overlays, audio mixing), and pyttsx3 provides offline text-to-speech, avoiding additional API costs. Together, they create engaging video outputs.
-o	Trade-off: MoviePy relies on ImageMagick, adding an external dependency, and pyttsx3’s voice quality is basic compared to cloud-based TTS (e.g., Google Text-to-Speech).
-6.	pytubefix
-o	Why: Enables downloading YouTube videos for background content, keeping the script self-contained without hosting large video files.
-o	Trade-off: Relies on YouTube’s API stability and terms of service; a local video library would be more reliable but less dynamic.
-7.	msoffcrypto
-o	Why: Decrypts password-protected Excel files, ensuring data security aligns with banking standards.
-o	Trade-off: Adds complexity; unencrypted files or a database might simplify but compromise security.
+  1.	Python
+    o	Why: A versatile, high-level language with strong libraries for data processing (pandas), AI (openai), web development (Flask), and multimedia (MoviePy, pyttsx3). Ideal for rapid prototyping and integrating diverse functionalities.
+    o	Trade-off: Slower execution compared to compiled languages, but team is expert in Python and performance isn’t critical for this use case.
+
+  3.	Pandas
+    o	Why: Efficiently handles tabular data (Excel files) with powerful merging and filtering capabilities, essential for combining customer datasets.
+    o	Trade-off: Memory-intensive for large datasets; alternatives like polars could offer better performance for big data.
+
+  5.	OpenAI API
+    o	Why: Provides state-of-the-art natural language generation for personalized recommendations, leveraging customer data and sentiment analysis. The gpt-4o-mini model balances cost and quality.
+    o	Trade-off: Dependency on external API introduces latency, cost, and potential downtime risks. Local models (e.g., via Hugging Face) could reduce this but require more setup.
+
+  6.	Flask and SocketIO
+  
+    o	Why: Flask is lightweight and sufficient for a simple web app, while SocketIO enables real-time updates, critical for a responsive UI during recommendation and video generation.
+    o	Trade-off: Flask isn’t ideal for large-scale apps; a framework like Django might be overkill here but offers more built-in features
+
+  7.	MoviePy and pyttsx3
+  
+    o	Why: MoviePy simplifies video editing (text overlays, audio mixing), and pyttsx3 provides offline text-to-speech, avoiding additional API costs. Together, they create engaging video outputs.
+    o	Trade-off: MoviePy relies on ImageMagick, adding an external dependency, and pyttsx3’s voice quality is basic compared to cloud-based TTS (e.g., Google Text-to-Speech).
+
+  8.	pytubefix
+  
+    o	Why: Enables downloading YouTube videos for background content, keeping the script self-contained without hosting large video files.
+    o	Trade-off: Relies on YouTube’s API stability and terms of service; a local video library would be more reliable but less dynamic.
+
+  9.	msoffcrypto
+  
+    o	Why: Decrypts password-protected Excel files, ensuring data security aligns with banking standards.
+    o	Trade-off: Adds complexity; unencrypted files or a database might simplify but compromise security.
 
 This script is a solid proof-of-concept for personalized banking recommendations with multimedia output, leveraging Python’s ecosystem effectively. With refinements, it could scale to production use.
 
@@ -164,13 +174,19 @@ This script is a solid proof-of-concept for personalized banking recommendations
 
 
 **Business recommendations based on AI-Driven findings**
+
 Here is one of Business recommendations provided using the created model:
-Hello John, I am your Investment Advisor Jeremy Porter. Wells Fargo would like to recommend you a few products that can enhance your banking experience and support your financial goals.
-	First, I recommend the Wells Fargo Home Mortgage. Understanding your recent concerns regarding the home loan application process, this mortgage offers tailored solutions that can ease your path to homeownership with competitive rates and flexible terms designed for your unique situation.
-	Second, consider the Wells Fargo Personal Loan. With your strong income and positive banking history, this personal loan can provide you with the funds you need for any significant purchases or debt consolidation, all while enjoying fixed monthly payments and no prepayment penalties.
-	Finally, I suggest the Wells Fargo Cash Back Rewards Card. This credit card allows you to earn cash back on your everyday purchases, including clothing, which has been a recent focus for you. With no annual fee and the ability to earn rewards, it will complement your spending habits while providing you with financial flexibility.
-	These products not only align with your current needs but also set you on the path to achieving your financial aspirations. Let’s take the next steps together.
-Visit wellsfargo.com for more details.
+
+  Hello John, I am your Investment Advisor Jeremy Porter. Wells Fargo would like to recommend you a few products that can enhance your banking experience and support your financial goals.
+  
+  	First, I recommend the Wells Fargo Home Mortgage. Understanding your recent concerns regarding the home loan application process, this mortgage offers tailored solutions that can ease your path to homeownership with competitive rates and flexible terms designed for your unique situation.
+  
+  	Second, consider the Wells Fargo Personal Loan. With your strong income and positive banking history, this personal loan can provide you with the funds you need for any significant purchases or debt consolidation, all while enjoying fixed monthly payments and no prepayment penalties.
+  
+  	Finally, I suggest the Wells Fargo Cash Back Rewards Card. This credit card allows you to earn cash back on your everyday purchases, including clothing, which has been a recent focus for you. With no annual fee and the ability to earn rewards, it will complement your spending habits while providing you with financial flexibility.
+  
+  	These products not only align with your current needs but also set you on the path to achieving your financial aspirations. Let’s take the next steps together.
+  Visit wellsfargo.com for more details.
 
 ---
 
